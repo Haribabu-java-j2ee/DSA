@@ -38,29 +38,28 @@ public class CriticalConnections {
         }
         arrivals = new Integer[number_of_servers];
         departure = new Integer[number_of_servers];
-        dfs(0,-1, visited,  adjList, result);
+        dfs(0, -1, result, visited, adjList);
         if (result.isEmpty()) {
             result.add(new ArrayList<>(Arrays.asList(-1, -1)));
         }
         return result;
     }
 
-    private static void dfs(int src,int parentNode, boolean[] visited, ArrayList<ArrayList<Integer>> adjList, ArrayList<ArrayList<Integer>> result) {
+    static void dfs(int src, int parent, ArrayList<ArrayList<Integer>> result, boolean[] visited, ArrayList<ArrayList<Integer>> adjList) {
         visited[src] = true;
         arrivals[src] = timestamp++;
-        departure[src] = timestamp;
-        for(int neighbor : adjList.get(src)) {
-            if(parentNode == neighbor) {
+        departure[src] = arrivals[src];
+        for (int neighbor : adjList.get(src)) {
+            if (neighbor == parent) {
                 continue;
             }
-            if(!visited[neighbor]) {
-                dfs(neighbor, src, visited, adjList, result);
-                departure[src] = Math.min(departure[src], departure[neighbor]);
-                if(departure[neighbor] >arrivals[src]) {
-                    result.add(new ArrayList<>(Arrays.asList(neighbor, src)));
-                }
-            }else {
-                departure[src] = Math.min(departure[src], arrivals[neighbor]);
+            if (!visited[neighbor]) {
+                dfs(neighbor, src, result, visited, adjList);
+
+            }
+            departure[src] = Math.min(departure[src], departure[neighbor]);
+            if (departure[neighbor] > arrivals[src]) {
+                result.add(new ArrayList(Arrays.asList(src, neighbor)));
             }
         }
     }
