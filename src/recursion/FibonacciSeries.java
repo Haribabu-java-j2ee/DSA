@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class FibonacciSeries {
     public static void main(String[] args) {
-        System.out.println(find_fibonacci(2));
+        System.out.println(find_fibonacci(5));
         System.out.println(find_fibonacci1(2));
     }
 

@@ -20,3 +20,8 @@ no of connected components in an undirected graph
 https://docs.google.com/document/d/1eMkpJJAb-hfby1L35LEBWDdUH4xyG5-jIRMZflRZ2LE/edit?tab=t.0
 
 https://docs.google.com/document/d/13H5iY9uFVHwMpHe8c-3AoROgC7Mi_9X3q3m5mVL6Tss/edit?tab=t.0
+
+https://leetcode.com/problems/longest-increasing-subsequence/description/
+
+company wise prep:
+https://www.geeksforgeeks.org/must-coding-questions-company-wise/
