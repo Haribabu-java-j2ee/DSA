@@ -25,3 +25,6 @@ https://leetcode.com/problems/longest-increasing-subsequence/description/
 
 company wise prep:
 https://www.geeksforgeeks.org/must-coding-questions-company-wise/
+
+system design
+https://docs.google.com/document/d/1IT7DIA_PDpnjIH68k_buIyKPiCSCMZDm6GPj9OZ6uGw/edit?tab=t.0
