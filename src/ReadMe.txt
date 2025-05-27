@@ -28,3 +28,6 @@ https://www.geeksforgeeks.org/must-coding-questions-company-wise/
 
 system design
 https://docs.google.com/document/d/1IT7DIA_PDpnjIH68k_buIyKPiCSCMZDm6GPj9OZ6uGw/edit?tab=t.0
+
+uber
+https://docs.google.com/document/d/1HtbydCmkOueaY7eaC52_5vfS14RJR_RZkgOXA0FNT2Y/edit?tab=t.0

@@ -1,4 +1,4 @@
-package intuit.practve;
+package intuit.practice;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package intuit.practve;
+package intuit.practice;
 
 public class SearchInRotatedArr {
     public static void main(String[] args) {

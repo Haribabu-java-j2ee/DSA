@@ -18,7 +18,7 @@ import java.util.*;
 public class ShortestPathin2DGrid {
 
     public static void main(String[] args) {
-       String[] grid={"...B",".b#.","@#+."};
+       String[] grid={"...A",".a#.","@#+."};
        ArrayList<String> gridList = new ArrayList<>(Arrays.asList(grid));
         find_shortest_path(gridList).stream().forEach(System.out::println);
     }
@@ -90,11 +90,11 @@ public class ShortestPathin2DGrid {
     }
 
     static boolean isKey(char ch) {
-        return ('a' <= ch && ch < ('a' + MAX_KEYS));
+        return ('a' <= ch && ch < 'j');
     }
 
     static boolean isDoor(char ch) {
-        return ('A' <= ch && ch < ('A' + MAX_KEYS));
+        return ('A' <= ch && ch < 'J');
     }
 
     static boolean canOpenDoor(char door, int keyring) {
