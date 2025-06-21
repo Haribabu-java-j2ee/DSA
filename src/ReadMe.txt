@@ -31,3 +31,17 @@ https://docs.google.com/document/d/1IT7DIA_PDpnjIH68k_buIyKPiCSCMZDm6GPj9OZ6uGw/
 
 uber
 https://docs.google.com/document/d/1HtbydCmkOueaY7eaC52_5vfS14RJR_RZkgOXA0FNT2Y/edit?tab=t.0
+
+paste bin:
+https://app.eraser.io/workspace/jjNJbHXIS85yWIy4J6F6
+
+merge k sorted lists
+
+reasons to go for distributed file systems
+https://docs.google.com/presentation/d/1fX-kWpfEudSPG6ZzY4Bx5imYcDZ9iiNQ1e0rZKQie4s/edit?slide=id.p67#slide=id.p67
+
+url shortner:
+https://excalidraw.com/#json=kF1JKIFsWXvCauRcrNKBH,de2Dc34bUo2l5yCg30qrMw
+
+yelp:
+https://excalidraw.com/#room=73c0b49c60134bd3f32e,3ehrb_6cnsnfa0TwiicG5Q

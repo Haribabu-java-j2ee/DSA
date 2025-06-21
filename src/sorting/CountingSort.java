@@ -1,8 +1,6 @@
 package sorting;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class CountingSort {
     public static void main(String[] args) {
@@ -28,7 +26,7 @@ public class CountingSort {
         arrayList.add(4);
         arrayList.add(1);
         arrayList.add(7);
-        counting_sort1(arrayList);
+        counting_sort(arrayList);
         arrayList.forEach(System.out::println);
     }
 

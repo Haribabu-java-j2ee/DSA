@@ -39,7 +39,6 @@ public class AttendMeetings {
 
 //O(n)
     static Integer can_attend_all_meetings(ArrayList<ArrayList<Integer>> intervals) {
-        boolean attend = false;
         Collections.sort(intervals, (a, b) -> {
             if (a.get(0).equals(b.get(0))) {
                 return a.get(1) - b.get(1);

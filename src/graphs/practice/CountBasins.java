@@ -11,11 +11,11 @@ public class CountBasins {
                 {2, 1, 3},
                 {2, 3, 0}};*/
 
-       /* int[][] grid = {
+        int[][] grid = {
                 {1, 5, 2},
                 {2, 4, 7},
                 {3, 6, 9}
-        };*/
+        };
 
         /*int[][] grid = {
                 {0, 2, 1, 3},
@@ -24,11 +24,11 @@ public class CountBasins {
                 {5, 5, 2, 1}
         };*/
 
-        int[][] grid = {
+       /* int[][] grid = {
                 {3, 4, 4},
                 {2, 1, 3},
                 {2, 3, 0}
-        };
+        };*/
 
         ArrayList<ArrayList<Integer>> heightList = new ArrayList<>();
         Arrays.stream(grid).forEach(arr -> {
@@ -45,7 +45,7 @@ public class CountBasins {
      * Total space: O(n).
      */
 
-    // Counting Sort. See IK Sorting class or foundation.
+
     static void count_sort(ArrayList<Integer> arr) {
         int max = Collections.max(arr);
         int min = Collections.min(arr);
@@ -72,7 +72,11 @@ public class CountBasins {
         }
     }
 
-    static int get_sink(ArrayList<ArrayList<Integer>> matrix, ArrayList<ArrayList<Integer>> basins, int row, int column) {
+    static int get_sink(ArrayList<ArrayList<Integer>> matrix, ArrayList<ArrayList<Integer>> basins, int row, int column,int[][] priorBasins) {
+
+        if(priorBasins[row][column]!=-1){
+            return priorBasins[row][column];
+        }
         int min_row = row, min_column = column;
         // Check element which is at left
         if (column > 0 && matrix.get(row).get(column - 1) < matrix.get(min_row).get(min_column)) {
@@ -97,17 +101,21 @@ public class CountBasins {
 
         if (row == min_row && column == min_column) {
             // If we reached at sink.
-            return basins.get(min_row).get(min_column);
+            return priorBasins[row][column]=basins.get(min_row).get(min_column);
         }
 
         // Recursively call to get sink for element matrix[min_row][min_col].
-        return get_sink(matrix, basins, min_row, min_column);
+        return priorBasins[row][column]=get_sink(matrix, basins, min_row, min_column,priorBasins);
     }
 
     static ArrayList<Integer> find_basins(ArrayList<ArrayList<Integer>> matrix) {
+
         int row_count = matrix.size();
         int column_count = matrix.get(0).size();
-
+        int[][] priorBasins=new int[row_count][column_count];
+        for(int i=0;i<row_count;i++){
+            Arrays.fill(priorBasins[i],-1);
+        }
         // To maintain ids of each element of matrix.
         ArrayList<ArrayList<Integer>> basins = new ArrayList<>();
         for (int i = 0; i < row_count; i++) {
@@ -127,7 +135,7 @@ public class CountBasins {
 
         for (int i = 0; i < row_count; i++) {
             for (int j = 0; j < column_count; j++) {
-                int sink = get_sink(matrix, basins, i, j);
+                int sink = get_sink(matrix, basins, i, j,priorBasins);
                 basin_indexes.put(sink, basin_indexes.getOrDefault(sink, 0) + 1);
             }
         }
