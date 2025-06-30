@@ -17,205 +17,109 @@ import java.util.*;
  * */
 public class ShortestPathin2DGrid {
 
+    static int rows;
+    static int cols;
+    private static final int[] rowDirections = {-1, 1, 0, 0};
+    private static final int[] colDirections = {0, 0, -1, 1};
+    // @ and + are the start and goal cells
     public static void main(String[] args) {
-       String[] grid={"...A",".a#.","@#+."};
-       ArrayList<String> gridList = new ArrayList<>(Arrays.asList(grid));
+        String[] grid = {"...A", ".a#.", "@#+."};
+        ArrayList<String> gridList = new ArrayList<>(Arrays.asList(grid));
         find_shortest_path(gridList).stream().forEach(System.out::println);
     }
 
-    /*
-     * Asymptotic complexity in terms of the number of rows in the grid rows and the number of columns in the grid columns and the total number of keys keys:
-     * Time: O(rows * columns * 2^keys).
-     * Auxiliary space: O(rows * columns * 2^keys).
-     * Total space: O(rows * columns * 2^keys).
-     */
-    static class Pair<T, U> {
-        private final T first;
-        private U second;
-
-        public Pair(T first, U second) {
-            this.first = first;
-            this.second = second;
+    private static ArrayList<ArrayList<Integer>> find_shortest_path(ArrayList<String> gridList) {
+        rows = gridList.size();
+        cols = gridList.get(0).length();
+        int[] start=findPosition(gridList,'@');
+        int[] end=findPosition(gridList,'+');
+        if(start==null ||end==null){
+            return new ArrayList<>();
         }
-
-        public T getFirst() {
-            return first;
+        List<int[]> paths=findShortestPathWithKeys(gridList, start, end);
+        ArrayList<ArrayList<Integer>> result=new ArrayList<>();
+        if(!paths.isEmpty()){
+            for(int i=0; i<paths.size(); i++){
+                int[] coordinates=paths.get(i);
+                int row=coordinates[0];
+                int col=coordinates[1];
+                result.add(new ArrayList());
+                result.get(result.size()-1).add(row);
+                result.get(result.size()-1).add(col);
+            }
         }
-
-        public U getSecond() {
-            return second;
-        }
-
-        public void setSecond(U second) {
-            this.second = second;
-        }
+        return result;
     }
 
-    static final int MAX_KEYS = 10;
-    static final int MAX_MASK = (1 << MAX_KEYS);
-
-    static ArrayList<ArrayList<Integer>> buildPath(ArrayList<ArrayList<ArrayList<Pair<Pair<Integer, Integer>, Integer>>>> parent,
-                                                   int keyring, Pair<Integer, Integer> start, Pair<Integer, Integer> goal) {
-        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
-        ans.add(new ArrayList<>());
-        ans.get(0).add(goal.getFirst());
-        ans.get(0).add(goal.getSecond());
-
-        while (!goal.equals(start) || keyring != 0) {
-            Pair<Pair<Integer, Integer>, Integer> par = parent.get(goal.getFirst()).get(goal.getSecond()).get(keyring);
-            goal = par.getFirst();
-            keyring = par.getSecond();
-            ans.add(new ArrayList<>());
-            ans.get(ans.size() - 1).add(goal.getFirst());
-            ans.get(ans.size() - 1).add(goal.getSecond());
-        }
-        Collections.reverse(ans);
-        return ans;
-    }
-
-    static boolean isStart(char ch) {
-        return ch == '@';
-    }
-
-    static boolean isGoal(char ch) {
-        return ch == '+';
-    }
-
-    static boolean isWater(char ch) {
-        return ch == '#';
-    }
-
-    static boolean isLand(char ch) {
-        return ch == '.';
-    }
-
-    static boolean isKey(char ch) {
-        return ('a' <= ch && ch < 'j');
-    }
-
-    static boolean isDoor(char ch) {
-        return ('A' <= ch && ch < 'J');
-    }
-
-    static boolean canOpenDoor(char door, int keyring) {
-        return (keyring >> (door - 'A')) % 2 == 1;
-    }
-
-    static void addNeighborToQueue(int toRow, int toCol, int toKeyring,
-                                   Pair<Pair<Integer, Integer>, Integer> from, ArrayList<ArrayList<ArrayList<Pair<Pair<Integer, Integer>, Integer>>>> parent,
-                                   ArrayList<ArrayList<ArrayList<Boolean>>> visited, Queue<Pair<Pair<Integer, Integer>, Integer>> q) {
-        parent.get(toRow).get(toCol).set(toKeyring, from);
-        visited.get(toRow).get(toCol).set(toKeyring, true);
-        q.add(new Pair<>(new Pair<>(toRow, toCol), toKeyring));
-    }
-
-    static int bfs(ArrayList<String> grid, Pair<Integer, Integer> start,
-                   ArrayList<ArrayList<ArrayList<Pair<Pair<Integer, Integer>, Integer>>>> parent,
-                   ArrayList<ArrayList<ArrayList<Boolean>>> visited) {
-        int rows = grid.size();
-        int cols = grid.get(0).length();
-
-        Queue<Pair<Pair<Integer, Integer>, Integer>> q = new LinkedList<>();
-        q.add(new Pair<>(start, 0));
-        visited.get(start.getFirst()).get(start.getSecond()).set(0, true);
-
-        while (!q.isEmpty()) {
-            Pair<Pair<Integer, Integer>, Integer> from = q.poll();
-            int keyring = from.getSecond();
-
-            ArrayList<Pair<Integer, Integer>> steps = new ArrayList<>();
-            steps.add(new Pair<>(-1, 0));
-            steps.add(new Pair<>(0, -1));
-            steps.add(new Pair<>(1, 0));
-            steps.add(new Pair<>(0, 1));
-
-            for (Pair<Integer, Integer> step : steps) {
-                int toRow = from.getFirst().getFirst() + step.getFirst();
-                int toCol = from.getFirst().getSecond() + step.getSecond();
-                if (toRow < 0 || toRow >= rows || toCol < 0 || toCol >= cols) {
+    private static List<int[]> findShortestPathWithKeys(ArrayList<String> gridList, int[] start, int[] end) {
+        Queue<Node> queue = new LinkedList<>();
+        Set<String> visited = new HashSet<>();
+        List<int[]> initPath=new ArrayList<>();
+        initPath.add(new int[]{start[0],start[1]});
+        queue.add(new Node(start[0],start[1],0,0,initPath));
+        visited.add(start[0]+","+start[1]+",0");
+        while(!queue.isEmpty()){
+            Node currentNode = queue.poll();
+            if(currentNode.row==end[0] && currentNode.col==end[1]){
+                return currentNode.path;
+            }
+            for(int i=0;i<4;i++){
+                int newRow=currentNode.row+rowDirections[i];
+                int newCol=currentNode.col+colDirections[i];
+                if(newRow<0||newRow>=rows||newCol<0||newCol>=cols){
                     continue;
                 }
-                if (isGoal(grid.get(toRow).charAt(toCol))) {
-                    addNeighborToQueue(toRow, toCol, keyring, from, parent, visited, q);
-                    return keyring;
-                } else if (isLand(grid.get(toRow).charAt(toCol)) || isStart(grid.get(toRow).charAt(toCol))) {
-                    if (!visited.get(toRow).get(toCol).get(keyring)) {
-                        addNeighborToQueue(toRow, toCol, keyring, from, parent, visited, q);
+                char cell=gridList.get(newRow).charAt(newCol);
+                int newKey=currentNode.keys;
+                //creating new object is necessary or else it will modify the existing reference
+                List<int[]> newPath=new ArrayList<>(currentNode.path);
+                newPath.add(new int[]{newRow,newCol});
+                if(cell=='#'){
+                    continue;
+                }
+                if(cell>='A' && cell<='Z'){
+                    int keyNeeded=1<<(cell-'A');
+                    if((currentNode.keys & keyNeeded)==0){
+                        continue;
                     }
-                } else if (isKey(grid.get(toRow).charAt(toCol))) {
-                    int newKeyring = keyring | (1 << (grid.get(toRow).charAt(toCol) - 'a'));
-                    if (!visited.get(toRow).get(toCol).get(newKeyring)) {
-                        addNeighborToQueue(toRow, toCol, newKeyring, from, parent, visited, q);
-                    }
-                } else if (isDoor(grid.get(toRow).charAt(toCol)) &&
-                        canOpenDoor(grid.get(toRow).charAt(toCol), keyring) &&
-                        !visited.get(toRow).get(toCol).get(keyring)) {
-                    addNeighborToQueue(toRow, toCol, keyring, from, parent, visited, q);
+                }
+
+                if(cell>='a' && cell<='z'){
+                    newKey|=(1<<(cell-'a'));
+                }
+                String state=newRow+","+newCol+","+newKey;
+                if(!visited.contains(state)){
+                    visited.add(state);
+                    queue.add(new Node(newRow,newCol,newKey,currentNode.distance+1,newPath));
                 }
             }
         }
-        throw new RuntimeException("Something went wrong!");
+        return null;
     }
 
-    static Pair<Integer, Integer> findStartCell(ArrayList<String> grid) {
-        int rows = grid.size();
-        int cols = grid.get(0).length();
-
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < cols; c++) {
-                if (isStart(grid.get(r).charAt(c))) {
-                    return new Pair<>(r, c);
+    private static int[] findPosition(ArrayList<String> gridList, char target) {
+        for(int i=0;i<rows;i++) {
+            for(int j=0;j<cols;j++) {
+                if(gridList.get(i).charAt(j)==target) {
+                    return new int[]{i,j};
                 }
             }
         }
-        return null; // If start cell not found
+        return null;
     }
 
-    static Pair<Integer, Integer> findGoalCell(ArrayList<String> grid) {
-        int rows = grid.size();
-        int cols = grid.get(0).length();
+    static class Node {
+        int row, col;
+        int keys; // Bitmask of collected keys
+        int distance;
+        List<int[]> path;
 
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < cols; c++) {
-                if (isGoal(grid.get(r).charAt(c))) {
-                    return new Pair<>(r, c);
-                }
-            }
+        public Node(int row, int col, int keys, int distance, List<int[]> path) {
+            this.row = row;
+            this.col = col;
+            this.keys = keys;
+            this.distance = distance;
+            this.path = new ArrayList<>(path);
         }
-        return null; // If goal cell not found
-    }
-
-    static ArrayList<ArrayList<Integer>> find_shortest_path(ArrayList<String> grid) {
-        int rows = grid.size();
-        int cols = grid.get(0).length();
-        Pair<Integer, Integer> start = findStartCell(grid);
-        Pair<Integer, Integer> goal = findGoalCell(grid);
-
-        if (start == null || goal == null) {
-            return new ArrayList<>(); // If start or goal cell not found
-        }
-
-        ArrayList<ArrayList<ArrayList<Pair<Pair<Integer, Integer>, Integer>>>> parent = new ArrayList<>();
-        for (int i = 0; i < rows; i++) {
-            parent.add(new ArrayList<>());
-            for (int j = 0; j < cols; j++) {
-                parent.get(i).add(new ArrayList<>());
-                for (int k = 0; k < MAX_MASK; k++) {
-                    parent.get(i).get(j).add(new Pair<>(new Pair<>(-1, -1), -1));
-                }
-            }
-        }
-
-        ArrayList<ArrayList<ArrayList<Boolean>>> visited = new ArrayList<>();
-        for (int i = 0; i < rows; i++) {
-            visited.add(new ArrayList<>());
-            for (int j = 0; j < cols; j++) {
-                visited.get(i).add(new ArrayList<>(Collections.nCopies(MAX_MASK, false)));
-            }
-        }
-
-        int lastKeyring = bfs(grid, start, parent, visited);
-
-        return buildPath(parent, lastKeyring, start, goal);
     }
 }

@@ -45,3 +45,6 @@ https://excalidraw.com/#json=kF1JKIFsWXvCauRcrNKBH,de2Dc34bUo2l5yCg30qrMw
 
 yelp:
 https://excalidraw.com/#room=73c0b49c60134bd3f32e,3ehrb_6cnsnfa0TwiicG5Q
+
+educative
+https://www.educative.io/interview-prep/coding?page=roadmap
