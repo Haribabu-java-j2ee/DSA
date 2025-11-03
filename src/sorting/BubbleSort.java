@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 //sorting by comparing adjacent element
 //i.e., swap only happens at adjacent element at 1 time
+//t(n)=O(n^2)
+// constant space
 public class BubbleSort {
     public static void main(String[] args) {
         int[] arr = {5, 4, 3, 2, 1};

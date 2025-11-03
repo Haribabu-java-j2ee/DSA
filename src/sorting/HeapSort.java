@@ -3,6 +3,7 @@ package sorting;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Objects;
 
 public class HeapSort {
     public static void main(String[] args) {
@@ -51,13 +52,13 @@ public class HeapSort {
     }
 
 
-
+    //t(n)=O(nlogn)
+    //s(n)=O(logn) for recursion stack
     static ArrayList<Integer> heap_sort(ArrayList<Integer> arr) {
         int n=arr.size();
         for(int i=n/2-1;i>=0;i--){
             heapify(arr,n,i);
         }
-        int temp;
         for(int i=n-1;i>0;i--){
             Collections.swap(arr,0,i);
             heapify(arr,i,0);
@@ -84,5 +85,50 @@ public class HeapSort {
             heapify(arr,n,largest);
         }
     }
+
+
+//t(n)=O(nlogn)
+    //s(n)=O(1)
+    static ArrayList<Integer> heap_sort_iterative(ArrayList<Integer> arr) {
+        if(Objects.isNull(arr) || arr.isEmpty()){
+            return arr;
+        }
+        int n=arr.size();
+        for(int i=n/2-1;i>=0;i--){
+            heapify_iterative(arr,i,n);
+        }
+
+        for(int i=n-1;i>0;i--){
+            Collections.swap(arr,0,i);
+            heapify_iterative(arr,0,i);
+        }
+        return arr;
+    }
+
+    public static void heapify_iterative(ArrayList<Integer> arr, int rootIndex, int n){
+        int currentRootIndex=rootIndex;
+
+        while(true){
+            int i=currentRootIndex;
+            int left=2*i+1;
+            int right=2*i+2;
+            if(left<n && arr.get(left)>arr.get(i)){
+                i=left;
+            }
+            if(right<n && arr.get(right)>arr.get(i)){
+                i=right;
+            }
+
+            if(currentRootIndex!=i){
+                Collections.swap(arr,currentRootIndex,i);
+                currentRootIndex=i;
+            }else{
+                break;
+            }
+        }
+
+    }
+
+
 
 }

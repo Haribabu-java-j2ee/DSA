@@ -1,38 +1,34 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+
 public class SortCheck {
     public static void main(String[] args) {
-        int arr[] = {12, 54, 19, 67, 40};
-        int arr1[]={12, 19, 40, 54, 67};
-        int arr2[]={67, 54, 40, 19, 12};
-        int arr3[]={12, 12, 12, 12, 12};
-       /* Array 2 = [12, 19, 40, 54, 67]
-        Array 3 = [67, 54, 40, 19, 12]
-        Array 4 = [12, 12, 12, 12, 12]*/
-
-        System.out.println(checkSorted(arr));
-        System.out.println(checkSorted(arr1));
-        System.out.println(checkSorted(arr2));
-        System.out.println(checkSorted(arr3));
+        Character[] colors={'G', 'B', 'G', 'G', 'R', 'B', 'R', 'G'};
+        ArrayList<Character> balls = new ArrayList<>();
+        for (Character color : colors) {
+            balls.add(color);
+        }
+        dutch_flag_sort(balls);
+        balls.forEach(s->System.out.print(s+","));
     }
-    public static boolean checkSorted(int[] arr){
-        boolean ascendingSort=true;
-        boolean descendingSort=true;
-        for(int i=0;i<arr.length-1;i++){
-            if(arr[i]==arr[i+1]){
-                continue;
-            }
-            if(!(arr[i]<arr[i+1])){
-                ascendingSort=false;
-            }
-        }
-        for(int i=0;i<arr.length-1;i++){
-            if(arr[i]==arr[i+1]){
-                continue;
-            }
-            if(!(arr[i]>arr[i+1])){
-                descendingSort=false;
-            }
-        }
 
-        return ascendingSort || descendingSort;
+    public static void dutch_flag_sort(ArrayList<Character> balls){
+        int redIndex=0;
+        int blueIndex=balls.size()-1;
+        int currentIndex=0;
+        while(currentIndex<=blueIndex){
+            if(balls.get(currentIndex)=='R'){
+                Collections.swap(balls,currentIndex,redIndex);
+                currentIndex++;
+                redIndex++;
+            }else if(balls.get(currentIndex)=='G'){
+                currentIndex++;
+            }else{
+                Collections.swap(balls,currentIndex,blueIndex);
+                blueIndex--;
+            }
+        }
     }
 }

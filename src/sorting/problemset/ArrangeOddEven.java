@@ -11,8 +11,9 @@ import java.util.Arrays;
  * OUTPUT
  *
  * [4, 2, 3, 1]
- *
+ * t(n)=O(n)
  * */
+
 public class ArrangeOddEven {
     public static void main(String[] args) {
         int[] arr={1, 2, 3, 4};

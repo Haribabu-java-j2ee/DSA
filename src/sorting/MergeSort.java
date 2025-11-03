@@ -3,7 +3,9 @@ package sorting;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
+//t(n)=O(nlogn)
 public class MergeSort {
     public static void main(String[] args) {
         int[] arr = {5, 4, 3, 2, 1};
@@ -74,18 +76,21 @@ public class MergeSort {
 
 
 
-    static ArrayList<Integer> merge_sort(ArrayList<Integer> arr) {
-        mergesort(arr,0,arr.size()-1);
+    static ArrayList<Integer> merge_sort(ArrayList<Integer> arr){
+        if(Objects.isNull(arr) || arr.isEmpty()){
+            return arr;
+        }
+        merge_sort_helper(arr,0,arr.size()-1);
         return arr;
     }
 
-    static void mergesort(ArrayList<Integer> arr, int start,int end){
-        if(start < end){
+    static void merge_sort_helper(ArrayList<Integer> arr, int start, int end){
+        if(start<end){
             int mid=start+(end-start)/2;
-            mergesort(arr,start,mid);
-            mergesort(arr,mid+1,end);
+            merge_sort_helper(arr,start,mid);
+            merge_sort_helper(arr,mid+1,end);
 
-            int n1=mid-start+1;
+            int n1= mid-start+1;
             int n2=end-mid;
             int[] left=new int[n1];
             int[] right=new int[n2];
@@ -93,13 +98,12 @@ public class MergeSort {
             for(int i=0;i<n1;i++){
                 left[i]=arr.get(start+i);
             }
-
             for(int i=0;i<n2;i++){
                 right[i]=arr.get(mid+1+i);
             }
 
-            int i=0,j=0;
             int k=start;
+            int i=0,j=0;
 
             while(i<n1 && j<n2){
                 if(left[i]<=right[j]){
@@ -122,6 +126,7 @@ public class MergeSort {
                 j++;
                 k++;
             }
+
         }
     }
 }
