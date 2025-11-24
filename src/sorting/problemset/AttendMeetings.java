@@ -21,7 +21,7 @@ import java.util.*;
 public class AttendMeetings {
     public static void main(String[] args) {
         int[][] arr = {
-                {1, 5},
+                {1, 5},{2,5},
                 {10, 15},
                 {5, 8}
         };

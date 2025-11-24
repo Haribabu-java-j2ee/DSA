@@ -27,7 +27,9 @@ public class DutchNationalFlag {
         for (Character color : colors) {
             balls.add(color);
         }
-        dutch_flag_sort(balls);
+        //dutch_flag_sort(balls);
+        //balls.forEach(s->System.out.print(s+","));
+        dutch_flag_sort1(balls);
         balls.forEach(s->System.out.print(s+","));
     }
 
