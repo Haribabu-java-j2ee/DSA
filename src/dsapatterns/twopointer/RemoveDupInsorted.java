@@ -2,6 +2,7 @@ package dsapatterns.twopointer;
 
 import java.util.Arrays;
 
+//https://leetcode.com/problems/remove-duplicates-from-sorted-array/
 public class RemoveDupInsorted {
     public static void main(String[] args) {
         int[] nums = new int[]{1,1,2};
