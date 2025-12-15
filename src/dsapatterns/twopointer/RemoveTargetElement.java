@@ -3,7 +3,7 @@ package dsapatterns.twopointer;
 //https://leetcode.com/problems/remove-element/description/
 public class RemoveTargetElement {
     public static void main(String[] args) {
-        int[] nums= {3,2,2,3};
+        int[] nums= {2,3,3,2};
         int val=3;
         RemoveTargetElement obj=new RemoveTargetElement();
         int length=obj.removeElement(nums, val);

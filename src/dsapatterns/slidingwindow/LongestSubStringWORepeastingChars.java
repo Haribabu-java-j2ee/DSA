@@ -41,4 +41,20 @@ public class LongestSubStringWORepeastingChars {
         }
         return maxLength;
     }
+
+    // Optimized version using array instead of HashSet
+    public int lengthOfLongestSubstring2(String s) {
+        int[] charCount=new int[128];
+        int n=s.length();
+        int maxLength=0;
+        int j=0;
+        for(int i=0;i<n;i++){
+            charCount[s.charAt(i)]++;
+            while(charCount[s.charAt(i)]>1){
+                charCount[s.charAt(j++)]--;
+            }
+            maxLength=Math.max(maxLength,i-j+1);
+        }
+        return maxLength;
+    }
 }

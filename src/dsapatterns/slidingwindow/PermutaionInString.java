@@ -11,6 +11,9 @@ public class PermutaionInString {
         String s2="eidbaooo";
         PermutaionInString obj=new PermutaionInString();
         System.out.println(obj.checkInclusion(s1, s2));
+        System.out.println(obj.checkInclusion1(s1, s2));
+
+
     }
     public boolean checkInclusion(String s1, String s2) {
         int n = s1.length();
@@ -44,4 +47,25 @@ public class PermutaionInString {
         }
         return true;
     }
+
+
+    // this wont work since exact permutation is required, no additional characters allowed, i.e., for ab, ba is allowed , but boa or any other is not allowed
+    public boolean checkInclusion1(String s1, String s2) {
+        if(s2.length() <s1.length()){
+            return false;
+        }
+        int[] charSetCount=new int[128];
+        for(int i=0;i<s2.length();i++){
+            charSetCount[s2.charAt(i)]++;
+        }
+
+        for(int i=0;i<s1.length();i++){
+            int currentCount=charSetCount[s1.charAt(i)]--;
+            if(currentCount<0){
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

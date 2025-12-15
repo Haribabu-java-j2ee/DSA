@@ -2,11 +2,12 @@ package dsapatterns.twopointer;
 
 import java.util.Arrays;
 
+//https://leetcode.com/problems/merge-sorted-array/
 public class mergeSortedArr {
     public static void main(String[] args) {
-        int[] nums1= {1,2,3,0,0,0};
-        int[] nums2= {2,5,6};
-        int m=3,n=3;
+        int[] nums1= {0};
+        int[] nums2= {1};
+        int m=0,n=1;
         mergeSortedArr obj=new mergeSortedArr();
         obj.merge(nums1, m, nums2, n);
         Arrays.stream(nums1).forEach(num->System.out.print(num+" "));

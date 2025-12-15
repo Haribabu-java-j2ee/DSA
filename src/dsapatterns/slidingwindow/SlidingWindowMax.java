@@ -4,6 +4,7 @@ import java.util.*;
 //https://leetcode.com/problems/sliding-window-maximum/
 public class SlidingWindowMax {
     public static void main(String[] args) {
+
         int[] nums={1,3,1,2,0,5};
         int k=3;
         SlidingWindowMax obj=new SlidingWindowMax();
@@ -16,6 +17,8 @@ public class SlidingWindowMax {
         for(int num:result){
             System.out.print(num+" ");
         }
+
+
     }
     public int[] maxSlidingWindow(int[] nums, int k) {
         int n=nums.length;
@@ -40,6 +43,7 @@ public class SlidingWindowMax {
         return result;
     }
 
+    //decreasing queue and get the first element as max
     public int[] maxSlidingWindow1(int[] nums, int k) {
         int n=nums.length;
         if(n==0){

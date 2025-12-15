@@ -5,7 +5,7 @@ import java.util.Arrays;
 //https://leetcode.com/problems/remove-duplicates-from-sorted-array/
 public class RemoveDupInsorted {
     public static void main(String[] args) {
-        int[] nums = new int[]{1,1,2};
+        int[] nums = new int[]{1,2,2,2,2,3,4,5};
         RemoveDupInsorted obj = new RemoveDupInsorted();
         int k = obj.removeDuplicates(nums);
         System.out.println("Length after removing duplicates: " + k);

@@ -3,7 +3,7 @@ package dsapatterns.slidingwindow;
 //https://leetcode.com/problems/longest-repeating-character-replacement/
 public class LongestRepeatingCharacterReplacement {
     public static void main(String[] args) {
-        String s="AABABBA";
+        String s="ABCABBA";
         int k=1;
         LongestRepeatingCharacterReplacement obj=new LongestRepeatingCharacterReplacement();
         System.out.println(obj.characterReplacement(s, k));
