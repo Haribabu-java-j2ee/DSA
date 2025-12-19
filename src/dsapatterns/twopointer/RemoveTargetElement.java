@@ -13,29 +13,19 @@ public class RemoveTargetElement {
         }
     }
     public int removeElement(int[] nums, int val) {
-        int n=nums.length;
-        if(n==0){
-            return 0;
-        }
-        if(n==1 && nums[0]==val){
-            return 0;
-        }
-        int left=0;
-        int right=n-1;
+        int left = 0;
+        int right = nums.length - 1;
 
-        while(left<=right){
-            if(nums[right]==val){
+        while (left <= right) {
+            if (nums[left] == val) {
+                // Swap with right and decrease right
+               swap(left,right,nums);
                 right--;
-                continue;
+            } else {
+                left++;
             }
-            if(nums[left]==val){
-                swap(left,right,nums);
-                right--;
-            }
-            left++;
         }
-
-        return left;
+        return left; // left points to the count of non-val elements
     }
 
     private void swap(int left, int right, int[] nums){
