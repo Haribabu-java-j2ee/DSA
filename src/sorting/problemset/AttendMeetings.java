@@ -26,6 +26,7 @@ public class AttendMeetings {
                 {5, 8}
         };
 
+        Arrays.sort(arr, Comparator.comparingInt((int[]a)->a[0]).thenComparingInt(a->a[1]));
         ArrayList<ArrayList<Integer>> intervals = new ArrayList<>();
         for (int i = 0; i < arr.length; i++) {
             ArrayList<Integer> interval = new ArrayList<>();

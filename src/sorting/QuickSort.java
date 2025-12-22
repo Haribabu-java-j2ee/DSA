@@ -5,10 +5,10 @@ import java.util.*;
 public class QuickSort {
     public static void main(String[] args) {
         int[] arr = {5, 4, 3, 2, 1};
-        QuickSort qSort=new QuickSort();
-       // qSort.quickSort(arr,0,arr.length-1);
-       // Arrays.stream(arr).forEach(System.out::println);
-        ArrayList<Integer> arrayList= new ArrayList<>();
+        QuickSort qSort = new QuickSort();
+        // qSort.quickSort(arr,0,arr.length-1);
+        // Arrays.stream(arr).forEach(System.out::println);
+        ArrayList<Integer> arrayList = new ArrayList<>();
         arrayList.add(5);
         arrayList.add(4);
         arrayList.add(3);
@@ -19,37 +19,37 @@ public class QuickSort {
     }
 
     private static void quick_sort1(ArrayList<Integer> arrayList) {
-        quickSort(arrayList,0,arrayList.size()-1);
+        quickSort(arrayList, 0, arrayList.size() - 1);
     }
 
-    private static void quickSort(ArrayList<Integer> arrayList, int start , int end){
-        if(start<end){
-            int pivot=partition(arrayList,start,end);
-            quickSort(arrayList,start,pivot-1);
-            quickSort(arrayList,pivot+1,end);
+    private static void quickSort(ArrayList<Integer> arrayList, int start, int end) {
+        if (start < end) {
+            int pivot = partition(arrayList, start, end);
+            quickSort(arrayList, start, pivot - 1);
+            quickSort(arrayList, pivot + 1, end);
         }
     }
 
-    private static int partition(ArrayList<Integer> arrayList, int start , int end){
+    private static int partition(ArrayList<Integer> arrayList, int start, int end) {
         int randomIndex = start + new Random().nextInt(end - start + 1);
         Collections.swap(arrayList, randomIndex, end);
 
-        int pivot=arrayList.get(end);
-        int i=start-1;
-        for(int j=start;j<end;j++){
-            if(arrayList.get(j)<pivot){
+        int pivot = arrayList.get(end);
+        int i = start - 1;
+        for (int j = start; j < end; j++) {
+            if (arrayList.get(j) < pivot) {
                 i++;
-                Collections.swap(arrayList,i,j);
+                Collections.swap(arrayList, i, j);
             }
         }
-        Collections.swap(arrayList,i+1,end);
-        return i+1;
+        Collections.swap(arrayList, i + 1, end);
+        return i + 1;
     }
 
-    private void swap(int[] arr, int i, int j){
-        int temp=arr[i];
-        arr[i]=arr[j];
-        arr[j]=temp;
+    private void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
     }
 
 

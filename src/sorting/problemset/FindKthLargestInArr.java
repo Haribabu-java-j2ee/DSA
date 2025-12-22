@@ -11,7 +11,7 @@ public class FindKthLargestInArr {
         int k=2;
         ArrayList<Integer> arrList=new ArrayList<>();
         Arrays.stream(arr).forEach(arrList::add);
-        System.out.println(kth_largest_in_an_array2(arrList,k));
+        System.out.println(kth_largest_in_an_array1(arrList,k));
     }
 
     //O(nlongn)

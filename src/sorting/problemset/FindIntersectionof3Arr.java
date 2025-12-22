@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FindIntersectionArr {
+public class FindIntersectionof3Arr {
     public static void main(String[] args) {
         int[] arr1 = {1, 2, 2, 2, 9};
         int[] arr2 = {1, 1, 2, 2};
@@ -16,6 +16,8 @@ public class FindIntersectionArr {
         Arrays.stream(arr2).forEach(arrayList2::add);
         ArrayList<Integer> arrayList3 = new ArrayList<>();
         Arrays.stream(arr3).forEach(arrayList3::add);
+        find_intersection(arrayList1, arrayList2, arrayList3).forEach(System.out::println);
+        System.out.println("----------------");
         find_intersection2(arrayList1, arrayList2, arrayList3).forEach(System.out::println);
     }
 
@@ -24,11 +26,11 @@ public class FindIntersectionArr {
         // Write your code here.
         Map<Integer, Integer> map = new HashMap<>();
 
-        for (int i : arr1) {
+        for (int i=0; i<arr1.size(); i++) {
             map.put(i, 1);
         }
 
-        for (int i : arr2) {
+        for (int i=0;i<arr2.size(); i++) {
             map.put(i, map.getOrDefault(i, 0) != 0 ? 2 : 1);
         }
 

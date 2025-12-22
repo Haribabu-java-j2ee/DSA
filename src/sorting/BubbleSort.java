@@ -8,7 +8,7 @@ import java.util.Arrays;
 // constant space
 public class BubbleSort {
     public static void main(String[] args) {
-        int[] arr = {5, 4, 3, 2, 1};
+        int[] arr = {5,1,1,2,0,0};
         boolean swapped = false;
         int temp;
         for (int i = 0; i < arr.length-1; i++) {

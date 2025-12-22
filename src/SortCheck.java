@@ -1,34 +1,52 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 
 public class SortCheck {
     public static void main(String[] args) {
-        Character[] colors={'G', 'B', 'G', 'G', 'R', 'B', 'R', 'G'};
-        ArrayList<Character> balls = new ArrayList<>();
-        for (Character color : colors) {
-            balls.add(color);
-        }
-        dutch_flag_sort(balls);
-        balls.forEach(s->System.out.print(s+","));
+        int[] nums = {1};
+        int k=1;
+        SortCheck obj = new SortCheck();
+        int result = obj.findKthLargest(nums,k);
+        System.out.println(result);
     }
 
-    public static void dutch_flag_sort(ArrayList<Character> balls){
-        int redIndex=0;
-        int blueIndex=balls.size()-1;
-        int currentIndex=0;
-        while(currentIndex<=blueIndex){
-            if(balls.get(currentIndex)=='R'){
-                Collections.swap(balls,currentIndex,redIndex);
-                currentIndex++;
-                redIndex++;
-            }else if(balls.get(currentIndex)=='G'){
-                currentIndex++;
-            }else{
-                Collections.swap(balls,currentIndex,blueIndex);
-                blueIndex--;
+    public int findKthLargest(int[] nums, int k) {
+        if (nums == null || nums.length < k) {
+            return -1;
+        }
+        int low = 0;
+        int high = nums.length - 1;
+        while (low <= high) {
+            int partition = getRandomPartition(nums, low, high);
+            if (partition == nums.length - k) {
+                return nums[partition];
+            } else if (partition < nums.length - k) {
+                low = partition + 1;
+            } else {
+                high = partition - 1;
             }
         }
+        return -1;
     }
+
+    private int getRandomPartition(int[] nums, int low, int high){
+        int randomIndex=low+ new Random().nextInt(high-low+1);
+        swap(nums, randomIndex, high);
+        int i=low;
+        int pivot=nums[high];
+        for(int j=low;j<high;j++){
+            if(nums[j]<pivot){
+                swap(nums, i, j);
+                i++;
+            }
+        }
+        swap(nums,i,high);
+        return i;
+    }
+
+    private void swap(int[] nums, int low, int high){
+        int temp=nums[low];
+        nums[low]=nums[high];
+        nums[high]=temp;
+    }
+
 }
