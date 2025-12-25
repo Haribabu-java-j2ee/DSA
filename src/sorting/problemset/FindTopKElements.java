@@ -132,4 +132,25 @@ public class FindTopKElements {
         return pivot;
     }
 
+    //https://leetcode.com/problems/top-k-frequent-elements/
+    public int[] topKFrequent(int[] nums, int k) {
+        int[] result=new int[k];
+        PriorityQueue<int[]> topKelements=new PriorityQueue<>((a,b)->a[0]==b[0]?a[1]-b[1]:a[0]-b[0]);
+        Map<Integer,Integer> frequency=new HashMap<>();
+        for(int element:nums){
+            frequency.put(element, frequency.getOrDefault(element,0)+1);
+        }
+
+        for(Map.Entry<Integer,Integer> freqEntry:frequency.entrySet()){
+            topKelements.add(new int[]{freqEntry.getValue(),freqEntry.getKey()});
+            if(topKelements.size()>k){
+                topKelements.poll();
+            }
+        }
+        int i=0;
+        while(!topKelements.isEmpty()){
+            result[i++]=topKelements.poll()[1];
+        }
+        return result;
+    }
 }

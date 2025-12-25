@@ -1,52 +1,78 @@
 import java.util.*;
 
 public class SortCheck {
+    // Function using j = j + 1 update
     public static void main(String[] args) {
-        int[] nums = {1};
-        int k=1;
-        SortCheck obj = new SortCheck();
-        int result = obj.findKthLargest(nums,k);
-        System.out.println(result);
+        int n = 10000;
+        StringBuilder sb = new StringBuilder(n);
+        for (int i = 0; i < n - 1; i++) {
+            sb.append('a');
+        }
+        sb.append('b');
+        String s = sb.toString();
+        System.out.println("Input length: " + s.length());
+        runNaive(s);
+        runOptimized(s);
     }
 
-    public int findKthLargest(int[] nums, int k) {
-        if (nums == null || nums.length < k) {
-            return -1;
-        }
-        int low = 0;
-        int high = nums.length - 1;
-        while (low <= high) {
-            int partition = getRandomPartition(nums, low, high);
-            if (partition == nums.length - k) {
-                return nums[partition];
-            } else if (partition < nums.length - k) {
-                low = partition + 1;
+    static void runNaive(String s) {
+        int i = 0, j = 1, steps = 0;
+        int n = s.length();
+        System.out.println("\n--- Naive Approach ---");
+        while (j < n) {
+            int k = 0;
+            // Compare characters at i+k and j+k
+            while (j + k < n && s.charAt(i + k) == s.charAt(j + k)) {
+                k++;
+                steps++;
+            }
+            // Trace step
+            if (j + k < n) {
+                System.out.println("i=" + i + ", j=" + j + ", k=" + k + ", s[i+k]=" + s.charAt(i + k) + ", s[j+k]=" + s.charAt(j + k));
             } else {
-                high = partition - 1;
+                System.out.println("i=" + i + ", j=" + j + ", k=" + k + " (end of string)");
             }
-        }
-        return -1;
-    }
-
-    private int getRandomPartition(int[] nums, int low, int high){
-        int randomIndex=low+ new Random().nextInt(high-low+1);
-        swap(nums, randomIndex, high);
-        int i=low;
-        int pivot=nums[high];
-        for(int j=low;j<high;j++){
-            if(nums[j]<pivot){
-                swap(nums, i, j);
-                i++;
+            // Naive pointer update
+            if (j + k < n && s.charAt(i + k) < s.charAt(j + k)) {
+                i = j;
+                j = j + 1; // Naive update: always just advance by 1
+            } else {
+                j = j + k + 1;
             }
+            steps++; // Count outer loop step
         }
-        swap(nums,i,high);
-        return i;
+        System.out.println("Naive steps: " + steps);
+        System.out.println("Naive result: " + s.substring(i));
     }
 
-    private void swap(int[] nums, int low, int high){
-        int temp=nums[low];
-        nums[low]=nums[high];
-        nums[high]=temp;
+    static void runOptimized(String s) {
+        int i = 0, j = 1, steps = 0;
+        int n = s.length();
+        System.out.println("\n--- Optimized Approach ---");
+        while (j < n) {
+            int k = 0;
+            // Compare characters at i+k and j+k
+            while (j + k < n && s.charAt(i + k) == s.charAt(j + k)) {
+                k++;
+                steps++;
+            }
+            // Trace step
+            if (j + k < n) {
+                System.out.println("i=" + i + ", j=" + j + ", k=" + k + ", s[i+k]=" + s.charAt(i + k) + ", s[j+k]=" + s.charAt(j + k));
+            } else {
+                System.out.println("i=" + i + ", j=" + j + ", k=" + k + " (end of string)");
+            }
+            // Optimized pointer update
+            if (j + k < n && s.charAt(i + k) < s.charAt(j + k)) {
+                int tempIndex = i;
+                i = j;
+                j = Math.max(j + 1, tempIndex + k + 1); // Optimized: skip ahead
+            } else {
+                j = j + k + 1;
+            }
+            steps++; // Count outer loop step
+        }
+        System.out.println("Optimized steps: " + steps);
+        System.out.println("Optimized result: " + s.substring(i));
     }
-
 }

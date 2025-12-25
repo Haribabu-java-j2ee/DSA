@@ -1,14 +1,13 @@
 package sorting.problemset;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class FindKthLargestInArr {
     public static void main(String[] args) {
         int[] arr= {5, 1, 10, 3, 2};
         int k=2;
+        FindKthLargestInArr obj=new FindKthLargestInArr();
+        System.out.println(obj.findKthLargest(arr,k));
         ArrayList<Integer> arrList=new ArrayList<>();
         Arrays.stream(arr).forEach(arrList::add);
         System.out.println(kth_largest_in_an_array1(arrList,k));
@@ -65,5 +64,52 @@ public class FindKthLargestInArr {
         }
         Collections.swap(numbers,pivot,high);
         return pivot;
+    }
+
+
+    //hoare's quick select
+    //https://leetcode.com/problems/kth-largest-element-in-an-array/
+    public int findKthLargest(int[] nums, int k) {
+        k=nums.length-k;
+        quickSortHelper(nums,k,0,nums.length-1);
+        return nums[k];
+    }
+
+    private void quickSortHelper(int[] nums, int k, int low, int high){
+        if(low<high){
+            int position=getRandomPartition(nums,low,high);
+            if(position<k){
+                quickSortHelper(nums,k,position+1,high);
+            }else if(position>k){
+                quickSortHelper(nums,k,low,position-1);
+            }
+        }
+    }
+
+    private int getRandomPartition(int[] nums, int low, int high){
+        int randomIndex=low+new Random().nextInt(high-low+1);
+        int pivotValue=nums[randomIndex];
+        swap(nums,randomIndex,high);
+        int start=low;
+        int end=high-1;
+        while(start<=end){
+            if(nums[start]<pivotValue){
+                start++;
+            }else if(nums[end]>pivotValue){
+                end--;
+            }else{
+                swap(nums, start,end);
+                start++;
+                end--;
+            }
+        }
+        swap(nums,start,high);
+        return start;
+    }
+
+    private void swap(int[] nums, int i, int j){
+        int temp=nums[i];
+        nums[i]=nums[j];
+        nums[j]=temp;
     }
 }
