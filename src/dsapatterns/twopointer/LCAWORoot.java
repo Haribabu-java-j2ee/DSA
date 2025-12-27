@@ -5,8 +5,87 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-
-//https://www.educative.io/interview-prep/coding/solution-lowest-common-ancestor-of-a-binary-tree-iii
+/**
+ * =====================================================================================
+ * LCA (Lowest Common Ancestor) WITHOUT Root Access - Two Pointer Approach
+ * =====================================================================================
+ *
+ * PROBLEM: Find LCA of two nodes when you only have parent pointers, no root access.
+ *
+ * KEY INSIGHT: When a pointer reaches null (past root), redirect it to the OTHER
+ *              node's starting point. This equalizes the total distance both travel!
+ *
+ * =====================================================================================
+ * EXAMPLE TREE:
+ * =====================================================================================
+ *
+ *                    6           <- root
+ *                   / \
+ *                  2   8
+ *                 / \ / \
+ *                0  4 7  9
+ *                  / \
+ *                 3   5
+ *
+ * Finding LCA of nodes 0 and 5:
+ * -----------------------------
+ * Path from 0 to root: 0 → 2 → 6         (length = 3)
+ * Path from 5 to root: 5 → 4 → 2 → 6     (length = 4)
+ * LCA = 2
+ *
+ * =====================================================================================
+ * STEP-BY-STEP WALKTHROUGH:
+ * =====================================================================================
+ *
+ *  Step |  p1 (starts at 0)  |  p2 (starts at 5)  |  Notes
+ * ------+--------------------+--------------------+----------------------------------
+ *   0   |        0           |        5           |  Initial positions
+ *   1   |        2           |        4           |  Both move to parent
+ *   2   |        6           |        2           |  p1 at root, p2 continues
+ *   3   |       null         |        6           |  p1 past root
+ *   4   |  → Switch to 5     |       null         |  p1 redirects, p2 past root
+ *   5   |        4           |  → Switch to 0     |  p2 redirects
+ *   6   |       [2] ✓        |       [2] ✓        |  MATCH! LCA found
+ *
+ * =====================================================================================
+ * WHY THIS WORKS - MATHEMATICAL PROOF:
+ * =====================================================================================
+ *
+ * Let's define:
+ *   a = distance from node p to LCA        (0 → 2 = 1 step)
+ *   b = distance from node q to LCA        (5 → 4 → 2 = 2 steps)
+ *   c = distance from LCA to root          (2 → 6 = 1 step)
+ *
+ * Without switching:
+ *   p1 travels: a + c = 1 + 1 = 2  (then hits null)
+ *   p2 travels: b + c = 2 + 1 = 3  (then hits null)
+ *
+ * After switching (p1 → q's start, p2 → p's start):
+ *   p1 total: (a + c) + (b + c) = a + b + 2c  →  then walks back (b) to LCA
+ *   p2 total: (b + c) + (a + c) = a + b + 2c  →  then walks back (a) to LCA
+ *
+ * Both travel SAME total distance: a + b + 2c, meeting at LCA!
+ *
+ * =====================================================================================
+ * VISUAL PATH TRACE:
+ * =====================================================================================
+ *
+ *   p1: 0 → 2 → 6 → null → [switch to 5] → 4 → [2] ← MEET HERE!
+ *                              ↓
+ *   p2: 5 → 4 → 2 → 6 → null → [switch to 0] → [2] ← MEET HERE!
+ *
+ * Total steps for both: 6 steps each, meeting at node 2 (LCA)
+ *
+ * =====================================================================================
+ * TIME & SPACE COMPLEXITY:
+ * =====================================================================================
+ *   Time:  O(h) where h = height of tree (worst case O(n) for skewed tree)
+ *   Space: O(1) - only two pointers used
+ *
+ * =====================================================================================
+ *
+ * @see <a href="https://www.educative.io/interview-prep/coding/solution-lowest-common-ancestor-of-a-binary-tree-iii">Educative Reference</a>
+ */
 public class LCAWORoot {
 
     public static void main(String[] args) {
@@ -38,24 +117,39 @@ public class LCAWORoot {
             System.out.println(new String(new char[100]).replace("\0", "-"));
         }
     }
+    /**
+     * Finds LCA using two-pointer path equalization technique.
+     *
+     * Algorithm:
+     * 1. Start two pointers at p and q
+     * 2. Move each pointer to its parent
+     * 3. When a pointer reaches null (past root), redirect to OTHER node's start
+     * 4. Both pointers will meet at LCA after traveling equal distances
+     */
     public static EduTreeNode LowestCommonAncestor(EduTreeNode p, EduTreeNode q) {
 
-        // Replace this placeholder with actual logic
-        EduTreeNode ptr1=p;
-        EduTreeNode ptr2=q;
-        while(ptr1!=ptr2){
-            if(ptr1.parent!=null){
-                ptr1=ptr1.parent;
-            }else{
-                ptr1=q;
+        EduTreeNode ptr1 = p;  // Start at node p (e.g., node 0)
+        EduTreeNode ptr2 = q;  // Start at node q (e.g., node 5)
+
+        // Keep moving until both pointers meet at LCA
+        while (ptr1 != ptr2) {
+
+            // ptr1: Move to parent, or switch to q's start if past root
+            if (ptr1.parent != null) {
+                ptr1 = ptr1.parent;      // Normal: move up the tree
+            } else {
+                ptr1 = q;                // Switch: redirect to q's starting point
             }
 
-            if(ptr2.parent!=null){
-                ptr2=ptr2.parent;
-            }else{
-                ptr2=p;
+            // ptr2: Move to parent, or switch to p's start if past root
+            if (ptr2.parent != null) {
+                ptr2 = ptr2.parent;      // Normal: move up the tree
+            } else {
+                ptr2 = p;                // Switch: redirect to p's starting point
             }
         }
+
+        // Both pointers now point to LCA
         return ptr1;
     }
 }
