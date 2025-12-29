@@ -172,3 +172,4 @@ public class Product implements StockSubject {
     public double getPrice() { return price; }
 }
 
+

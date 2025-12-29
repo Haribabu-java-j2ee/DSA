@@ -84,4 +84,78 @@ public class Arrange0sLast {
         nums[i] = nums[j];
         nums[j] = temp;
     }
+
+    /**
+     * =====================================================================================
+     * ALTERNATE APPROACH: Overwrite + Fill (More Optimal)
+     * =====================================================================================
+     *
+     * INTUITION:
+     * -----------
+     * Instead of swapping, simply overwrite positions with non-zeros, then fill
+     * remaining positions with zeros. Avoids unnecessary swap operations.
+     *
+     * =====================================================================================
+     * WHERE THIS WINS:
+     * =====================================================================================
+     *
+     *   | Aspect              | moveZeroes (swap)       | moveZeroesOptimal (overwrite) |
+     *   |---------------------|-------------------------|-------------------------------|
+     *   | Pointers used       | 3 (i, j, k)             | 1 (insertPos)                 |
+     *   | Operations          | Swap every non-zero     | Overwrite + fill zeros        |
+     *   | Unnecessary work    | Swaps when i==j         | None                          |
+     *   | Write operations    | 2 per non-zero (swap)   | 1 per element                 |
+     *   | Code readability    | More complex            | Simpler, cleaner              |
+     *
+     * =====================================================================================
+     * EXAMPLE: [0,1,0,3,12] → [1,3,12,0,0]
+     * =====================================================================================
+     *
+     *   STEP 1: Move non-zeros to front
+     *   --------------------------------
+     *   insertPos | num  | Action              | Array State
+     *   ----------|------|---------------------|------------------
+     *       0     |  0   | skip (zero)         | [0,1,0,3,12]
+     *       0     |  1   | nums[0]=1, pos++    | [1,1,0,3,12]
+     *       1     |  0   | skip (zero)         | [1,1,0,3,12]
+     *       1     |  3   | nums[1]=3, pos++    | [1,3,0,3,12]
+     *       2     | 12   | nums[2]=12, pos++   | [1,3,12,3,12]
+     *
+     *   STEP 2: Fill remaining with zeros
+     *   ----------------------------------
+     *   insertPos=3: nums[3]=0 → [1,3,12,0,12]
+     *   insertPos=4: nums[4]=0 → [1,3,12,0,0]
+     *
+     *   Result: [1,3,12,0,0] ✓
+     *
+     * =====================================================================================
+     * COMPLEXITY:
+     * =====================================================================================
+     *   Time:  O(n) - Single pass + zero fill
+     *   Space: O(1) - In-place modification
+     *
+     * =====================================================================================
+     *
+     * @param nums The input array to be modified in-place
+     */
+    public void moveZeroesOptimal(int[] nums) {
+        int n = nums.length;
+        
+        if (n == 0)
+            return;
+        
+        int insertPos = 0;
+        
+        // Step 1: Move all non-zeros to front
+        for (int num : nums) {
+            if (num != 0) {
+                nums[insertPos++] = num;
+            }
+        }
+        
+        // Step 2: Fill remaining positions with zeros
+        while (insertPos < n) {
+            nums[insertPos++] = 0;
+        }
+    }
 }

@@ -56,6 +56,11 @@ public class StringCompression {
         }
     }
     
+    /**
+     * Alternate: Instead of String.valueOf(count).toCharArray(), can extract digits
+     * using count % 10 and count / 10, write in reverse, then reverse them.
+     * But String.valueOf() is cleaner and JVM-optimized for small numbers.
+     */
     public int compress(char[] chars) {
         int ans = 0;  // Write pointer
         int n = chars.length;

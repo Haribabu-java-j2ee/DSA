@@ -141,8 +141,11 @@ public class CreateMaximumNumber {
     }
 
     /**
-     * Compare two arrays lexicographically from given indices
+     * Compare two arrays lexicographically from given indices (RECURSIVE)
      * Returns true if nums1[i:] >= nums2[j:]
+     * 
+     * Note: Elegant but has O(n) stack depth. For very large arrays (n > 10,000),
+     * use compareIterative() to avoid potential StackOverflowError.
      */
     private boolean compare(int[] nums1, int[] nums2, int i, int j) {
         if (i >= nums1.length) {
@@ -158,5 +161,72 @@ public class CreateMaximumNumber {
             return false;
         }
         return compare(nums1, nums2, i + 1, j + 1);
+    }
+
+    /**
+     * =====================================================================================
+     * ALTERNATE APPROACH: Iterative Compare (Stack-Safe)
+     * =====================================================================================
+     *
+     * INTUITION:
+     * -----------
+     * Same logic as recursive, but uses a while loop instead of recursion.
+     * Avoids stack overflow for very large arrays.
+     *
+     * =====================================================================================
+     * WHERE THIS WINS:
+     * =====================================================================================
+     *
+     *   | Aspect              | compare (recursive)     | compareIterative         |
+     *   |---------------------|-------------------------|--------------------------|
+     *   | Stack depth         | O(n) - risky for large n| O(1) - constant          |
+     *   | Stack overflow risk | Yes, if n > ~10,000     | None                     |
+     *   | Performance         | Slight call overhead    | Marginally faster        |
+     *   | Code clarity        | More elegant            | Slightly verbose         |
+     *
+     * =====================================================================================
+     * EXAMPLE: nums1=[9,5,3], nums2=[9,5]
+     * =====================================================================================
+     *
+     *   Iteration | i | j | nums1[i] | nums2[j] | Action
+     *   ----------|---|---|----------|----------|------------------
+     *       1     | 0 | 0 |    9     |    9     | Equal, continue
+     *       2     | 1 | 1 |    5     |    5     | Equal, continue
+     *       3     | 2 | 2 |    3     |   N/A    | j exhausted!
+     *
+     *   j >= len2 (nums2 exhausted first) → nums1 has more elements → return true
+     *
+     * =====================================================================================
+     * COMPLEXITY:
+     * =====================================================================================
+     *   Time:  O(min(m,n)) - Compare until difference found or one exhausted
+     *   Space: O(1) - No recursion stack
+     *
+     * =====================================================================================
+     *
+     * @param nums1 First array
+     * @param nums2 Second array
+     * @param i     Starting index in nums1
+     * @param j     Starting index in nums2
+     * @return true if nums1[i:] >= nums2[j:] lexicographically
+     */
+    private boolean compareIterative(int[] nums1, int[] nums2, int i, int j) {
+        int len1 = nums1.length;
+        int len2 = nums2.length;
+        
+        while (i < len1 && j < len2) {
+            if (nums1[i] > nums2[j]) {
+                return true;
+            }
+            if (nums1[i] < nums2[j]) {
+                return false;
+            }
+            i++;
+            j++;
+        }
+        
+        // If nums1 still has elements (or both exhausted), nums1 >= nums2
+        // If only nums2 has elements left, nums2 > nums1
+        return i < len1 || j >= len2;
     }
 }
