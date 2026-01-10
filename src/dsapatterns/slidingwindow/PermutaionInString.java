@@ -4,7 +4,59 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-//https://leetcode.com/problems/permutation-in-string/
+/**
+ * =====================================================================================
+ * PERMUTATION IN STRING - Fixed Size Sliding Window
+ * =====================================================================================
+ * LeetCode: https://leetcode.com/problems/permutation-in-string/
+ *
+ * =====================================================================================
+ * INTUITION:
+ * =====================================================================================
+ * A permutation has exact same character frequencies. Use fixed window of size len(s1).
+ * Compare character frequency maps of s1 and current window.
+ * Slide window one position at a time, updating counts incrementally.
+ *
+ * =====================================================================================
+ * EXAMPLE: s1 = "ab", s2 = "eidbaooo" → returns true (window "ba" at index 3-4)
+ * =====================================================================================
+ *
+ *   map1 (s1="ab"): a:1, b:1
+ *
+ *   Window | map2              | match?
+ *   -------|-------------------|--------
+ *   "ei"   | e:1, i:1          | no
+ *   "id"   | i:1, d:1          | no
+ *   "db"   | d:1, b:1          | no
+ *   "ba"   | b:1, a:1          | YES! ← permutation found
+ *
+ *   Result: true
+ *
+ * =====================================================================================
+ * TWO APPROACHES:
+ * =====================================================================================
+ *   1. checkInclusion()  - Correct: Fixed window, compare frequency maps
+ *   2. checkInclusion1() - INCORRECT: Only checks if s1 chars exist in s2, ignores order/window
+ *
+ * =====================================================================================
+ * COMPLEXITY:
+ * =====================================================================================
+ *   Time:  O(26 * (m - n)) = O(m) where m = len(s2), n = len(s1)
+ *   Space: O(1) - Two fixed 26-size arrays
+ *
+ * =====================================================================================
+ * EDGE CASES:
+ * =====================================================================================
+ *   1. s1 longer than s2 → return false
+ *   2. s1 == s2 → return true
+ *   3. s1 at very end of s2 → still detected
+ *
+ * =====================================================================================
+ * OPTIMIZATION NOTE:
+ * =====================================================================================
+ * Instead of comparing full 26-element arrays each time, can track number of
+ * matching character counts. When matches == 26, return true. O(1) per comparison.
+ */
 public class PermutaionInString {
     public static void main(String[] args) {
         String s1="ab";
@@ -15,6 +67,10 @@ public class PermutaionInString {
 
 
     }
+    
+    /**
+     * CORRECT APPROACH: Fixed window of size n, slide and compare frequency maps.
+     */
     public boolean checkInclusion(String s1, String s2) {
         int n = s1.length();
         int m = s2.length();

@@ -80,3 +80,7 @@ public class TelegramNotificationObserver implements StockObserver {
 }
 
 
+
+
+
+
