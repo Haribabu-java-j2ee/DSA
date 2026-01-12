@@ -10,12 +10,19 @@ import static trees.BSTSearch.search_node;
  * ============================================================================
  * BST SUCCESSOR - Find Inorder Successor in Binary Search Tree
  * ============================================================================
- * 
+ * https://www.educative.io/interview-prep/coding/inorder-successor-in-bst
  * PROBLEM STATEMENT:
  * ------------------
  * Given a BST and a node, find the INORDER SUCCESSOR of that node.
  * Inorder Successor = The node that comes NEXT in inorder traversal.
  * In a BST, this is the node with the SMALLEST value GREATER than given node.
+ * 
+ * IMPORTANT NOTE:
+ * ---------------
+ * The node parameter might NOT be the actual node from the tree!
+ * It could be just a value holder. So we must:
+ * 1. First FIND the node in the tree by traversing
+ * 2. Then check if THAT found node has a right subtree
  * 
  * INTUITION:
  * ----------
@@ -61,6 +68,15 @@ import static trees.BSTSearch.search_node;
  * - No ancestor has 97 in its left subtree
  * - Successor = null (doesn't exist)
  * 
+ * Example 4: Tree [3,1,5,null,2], Successor of 1
+ *         3
+ *        / \
+ *       1   5
+ *        \
+ *         2
+ * - Find node 1 in tree, it has right child = 2
+ * - Successor = leftmost in right subtree = 2
+ * 
  * TIME COMPLEXITY:
  * ----------------
  * - O(h) where h = height of tree
@@ -73,98 +89,146 @@ import static trees.BSTSearch.search_node;
  * 
  * DRY RUN:
  * --------
- * Find successor of 93 in the tree above:
+ * Tree: [3,1,5,null,2]
+ *         3
+ *        / \
+ *       1   5
+ *        \
+ *         2
  * 
- * Step 1: Check if node 93 has right subtree
- *         93.right = null (NO right subtree) → Use Case 2
+ * Find successor of 1:
  * 
- * Step 2: Find ancestor from root
- *         | Current | Node Value | Action           | Ancestor |
- *         |---------|------------|------------------|----------|
- *         | 44      | 44         | 93 > 44, go right| null     |
- *         | 88      | 88         | 93 > 88, go right| null     |
- *         | 97      | 97         | 93 < 97, go left | 97       |
- *         | 93      | 93         | Found node!      | 97       |
+ * | Step | current | p.value vs current.value | Action      | ancestor |
+ * |------|---------|--------------------------|-------------|----------|
+ * | 1    | 3       | 1 < 3                    | Go left     | 3        |
+ * | 2    | 1       | 1 == 1, Found!           | Check right | 3        |
+ * | 3    | -       | current.right = 2        | Has right!  | -        |
+ * | 4    | 2       | 2.left = null            | Return 2    | -        |
  * 
- * Result: Successor of 93 is 97 ✓
- * 
- * Verification: Inorder traversal: ...82, 88, 93, 97...
- * 93 comes right before 97. ✓
+ * Result: Successor of 1 is 2 ✓
  */
 public class BSTSuccessor {
     
     public static void main(String[] args) {
-        // Build a complex BST for testing
-        Integer[] arr = {44, 17, 88, 8, 32, 65, 97, null, null, 28, null, 54, 82, 93, null, 29, 76, 80};
+        // Test case: [3,1,5,null,2], find successor of 1
+        Integer[] arr = {3, 1, 5, null, 2};
         ArrayList<Integer> list = new ArrayList<>();
         Arrays.stream(arr).forEach(list::add);
         BinaryTreeNode root = build_a_bst(list);
         
-        // Find node 93 and get its successor
-        BinaryTreeNode node = search_node(root, 93);
-        System.out.println(root);
+        // Create a node with just value (simulating LeetCode scenario)
+        BinaryTreeNode node = new BinaryTreeNode(1);  // Not connected to tree!
         
-        BinaryTreeNode successor = findSuccesor(root, node);
-        System.out.println("Successor of 93: " + (successor != null ? successor.value : null));
+        BinaryTreeNode successor = findSuccessor(root, node);
+        System.out.println("Successor of 1: " + (successor != null ? successor.value : null));
+        // Expected: 2
+        
+        // Test case 2: Successor of 3
+        node = new BinaryTreeNode(3);
+        successor = findSuccessor(root, node);
+        System.out.println("Successor of 3: " + (successor != null ? successor.value : null));
+        // Expected: 5
     }
 
     /**
-     * FIND INORDER SUCCESSOR
+     * FIND INORDER SUCCESSOR (Handles case where node might not be from tree)
+     * 
+     * Algorithm:
+     * 1. Traverse the tree to find the node matching p.value
+     * 2. During traversal, track ancestor (when we go left)
+     * 3. When found, check if THAT node (current) has right subtree
+     * 4. If yes, return leftmost in right subtree
+     * 5. If no, return the tracked ancestor
      * 
      * @param root Root of the BST
-     * @param node Node for which to find successor
+     * @param p Node for which to find successor (might just have value, not tree connection)
      * @return Successor node, or null if node is the largest
      */
-    private static BinaryTreeNode findSuccesor(BinaryTreeNode root, BinaryTreeNode node) {
+    private static BinaryTreeNode findSuccessor(BinaryTreeNode root, BinaryTreeNode p) {
         // Edge case: empty tree
+        if (root == null) {
+            return null;
+        }
+        
+        BinaryTreeNode ancestor = null;  // Track potential successor (last left turn)
+        BinaryTreeNode current = root;   // Current node during traversal
+        
+        // Traverse the tree to find p
+        while (current != null) {
+            if (p.value > current.value) {
+                // p is larger, go RIGHT
+                // Don't update ancestor (current is smaller than p)
+                current = current.right;
+                
+            } else if (p.value < current.value) {
+                // p is smaller, go LEFT
+                // Update ancestor! Current could be the successor
+                ancestor = current;
+                current = current.left;
+                
+            } else {
+                // ═══════════════════════════════════════════════════════════════
+                // FOUND THE NODE! Now check if it has right subtree
+                // ═══════════════════════════════════════════════════════════════
+                
+                // CASE 1: Node has RIGHT SUBTREE
+                // Successor is the leftmost node in right subtree
+                if (current.right != null) {
+                    current = current.right;
+                    while (current.left != null) {
+                        current = current.left;
+                    }
+                    return current;  // Leftmost in right subtree
+                }
+                
+                // CASE 2: Node has NO RIGHT SUBTREE
+                // Successor is the tracked ancestor
+                break;
+            }
+        }
+        
+        return ancestor;
+    }
+    
+    /**
+     * ORIGINAL APPROACH (Only works when p is actual node from tree)
+     * 
+     * This approach assumes p.right is correctly connected to the tree.
+     * Use findSuccessor() instead for general case.
+     * 
+     * @param root Root of the BST
+     * @param node Actual node from the tree (with valid left/right pointers)
+     * @return Successor node, or null if node is the largest
+     */
+    private static BinaryTreeNode findSuccessorWhenNodeIsFromTree(BinaryTreeNode root, BinaryTreeNode node) {
         if (root == null) {
             return null;
         }
         
         BinaryTreeNode current;
         
-        // ═══════════════════════════════════════════════════════════════════
-        // CASE 1: Node has RIGHT SUBTREE
-        // ═══════════════════════════════════════════════════════════════════
-        // Successor is the MINIMUM value in right subtree
-        // i.e., the leftmost node in right subtree
+        // CASE 1: Node has RIGHT SUBTREE (can check directly since node is from tree)
         if (node.right != null) {
-            current = node.right;  // Start from right child
-            
-            // Go as far left as possible
+            current = node.right;
             while (current.left != null) {
                 current = current.left;
             }
-            
-            return current;  // This is the successor
+            return current;
         }
         
-        // ═══════════════════════════════════════════════════════════════════
         // CASE 2: Node has NO RIGHT SUBTREE
-        // ═══════════════════════════════════════════════════════════════════
-        // Successor is an ancestor where we last took a LEFT turn
-        // (i.e., the nearest ancestor greater than the node)
+        BinaryTreeNode ancestor = null;
+        current = root;
         
-        BinaryTreeNode ancestor = null;  // Track the potential successor
-        current = root;                   // Start from root
-        
-        // Navigate to the node, tracking the last "left turn"
         while (current.value != node.value) {
             if (node.value > current.value) {
-                // Node is larger, go RIGHT
-                // Don't update ancestor (going right means current is smaller)
                 current = current.right;
             } else if (node.value < current.value) {
-                // Node is smaller, go LEFT
-                // Update ancestor! Current node could be the successor
-                // (we're moving to its left subtree, so current > node)
                 ancestor = current;
                 current = current.left;
             }
         }
         
-        // Return the last ancestor where we went left
-        // If we never went left, ancestor is null (node is the largest)
         return ancestor;
     }
 }
