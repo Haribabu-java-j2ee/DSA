@@ -7,7 +7,7 @@ import java.util.Arrays;
  * ============================================================================
  * BST DELETE - Delete nodes from a Binary Search Tree
  * ============================================================================
- * 
+ * https://leetcode.com/problems/delete-node-in-a-bst
  * PROBLEM STATEMENT:
  * ------------------
  * Given a BST and a list of values to delete, remove all those values from the BST
@@ -190,7 +190,78 @@ public class BSTDelete {
                 continue;  // Deletion complete for one-child case
             }
 
+            // ═══════════════════════════════════════════════════════════════════════════
             // Case 3: TWO CHILDREN - find inorder successor
+            // ═══════════════════════════════════════════════════════════════════════════
+            //
+            // EXAMPLE: Delete node 50 (has two children: 30 and 70)
+            //
+            //         BEFORE                           AFTER
+            //           50  ← delete this               55
+            //          /  \                            /  \
+            //        30    70                        30    70
+            //       /  \   / \                      /  \   / \
+            //     20  40 55  80                   20  40 60  80
+            //             \
+            //             60
+            //
+            // STEP-BY-STEP:
+            //
+            // 1. curr = 50 (node to delete), prev = parent of 50
+            //
+            // 2. Find INORDER SUCCESSOR (smallest value > 50)
+            //    - Go to right child: successor = 70, prev = 50
+            //    - Go left as far as possible:
+            //      - successor = 55, prev = 70
+            //      - 55.left = null, STOP
+            //    - Successor = 55 (leftmost in right subtree)
+            //
+            //           50
+            //          /  \
+            //        30    70  ← prev after while loop
+            //             /  \
+            //           55    80  ← successor (leftmost)
+            //             \
+            //             60
+            //
+            // 3. Copy successor's value to curr
+            //    - curr.value = 55 (now node shows 55 instead of 50)
+            //
+            // 4. Delete the successor node (55)
+            //    - Successor 55 is prev's LEFT child (55 == 70.left)
+            //    - So: prev.left = successor.right
+            //    - i.e., 70.left = 55.right = 60
+            //
+            //           55  ← copied value
+            //          /  \
+            //        30    70
+            //             /  \
+            //           60    80  ← 60 moved up (was 55's right child)
+            //
+            // WHY THIS WORKS:
+            // - Inorder successor is the SMALLEST value GREATER than curr
+            // - Replacing curr with successor maintains BST property:
+            //   - All left subtree values < successor (still valid)
+            //   - All right subtree values > successor (still valid, since successor was min)
+            // - Successor has AT MOST one child (right), because if it had a left child,
+            //   that left child would be smaller, contradicting "leftmost" status
+            //
+            // TWO SUB-CASES for deleting successor:
+            // - If successor == prev.left  → successor is leftmost (went down left)
+            // - If successor == prev.right → successor is immediate right child (no left turn)
+            //
+            //   Sub-case: Successor is immediate right child (no left child in right subtree)
+            //
+            //         50  ← delete                    60
+            //        /  \                            /  \
+            //      30    60  ← successor=prev.right 30   80
+            //              \
+            //              80
+            //
+            //   Here: prev = 50 (curr), successor = 60
+            //   successor == prev.right, so: prev.right = successor.right = 80
+            //
+            // ═══════════════════════════════════════════════════════════════════════════
             if (curr.left != null && curr.right != null) {
                 BinaryTreeNode successor = curr.right;  // Start from right child
                 prev = curr;
@@ -206,8 +277,12 @@ public class BSTDelete {
                 
                 // Delete the successor node (it has at most one right child)
                 if (successor == prev.left) {
+                    // Successor was found by going LEFT from prev
+                    // Replace prev's left child with successor's right subtree
                     prev.left = successor.right;
                 } else if (successor == prev.right) {
+                    // Successor is immediate right child (no left turn taken)
+                    // Replace prev's right child with successor's right subtree
                     prev.right = successor.right;
                 }
             }

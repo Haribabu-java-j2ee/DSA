@@ -111,7 +111,7 @@ public class BSTInsert {
         int[] val = {1, 2, 3, 4, 5};  // Sorted input - creates skewed tree
         ArrayList<Integer> values = new ArrayList<>();
         Arrays.stream(val).forEach(v -> values.add(v));
-        BinaryTreeNode tree = build_a_bst1(values);
+        BinaryTreeNode tree = build_a_bst(values);
         System.out.println(tree);
     }
 
